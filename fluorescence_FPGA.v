@@ -6,9 +6,11 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg [31:0] integration_timer= 0;	
 	reg [31:0] light_modulation_timer = 0;	
 
-	reg [31:0] pulse_count = 0;	
+//	reg [31:0] pulse_count = 0;	
+
+   reg [31:0] add_count = 0;	
 	reg [31:0] subtract_count = 0;
-	reg [31:0] add_count = 0;
+	
 	reg [31:0] pulse_out_accumulator= 0;
 	
 	output [7:0] LEDs;
@@ -20,11 +22,11 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000 * 5;
+	reg [31:0] integration_time = 32'd50000000 * 1;
 	
 	reg [31:0] light_modulation_period = 32'd5000;
 
-	assign LEDs = pulse_count;
+	assign LEDs = add_count;
 	
 	
 	reg light_source_flag = 0;
@@ -35,13 +37,14 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 
 	reg pulse_captured = 0;
 	reg prev_pulse_captured = 0;
-
+	reg light_source_capture_flag = 0;
 	
 	always @(posedge PMT_in)
 	begin
 		if(PMT_in)
 		begin
-			pulse_captured = !pulse_captured;
+			pulse_captured <= !pulse_captured;
+			light_source_capture_flag <= light_source_flag;
 		end
 //		else
 //		begin
@@ -90,8 +93,18 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		if(integration_timer >= integration_time-1)
 		begin 
 			integration_timer <= 32'd0;
-			pulse_out_accumulator<= pulse_count;
-			pulse_count <= 0;
+			if(add_count >= subtract_count)
+			begin
+				pulse_out_accumulator<= add_count - subtract_count;
+			end
+			else
+			begin
+				pulse_out_accumulator <= 0;
+			end
+			
+			add_count <= 0;
+			subtract_count <= 0;
+
 			clear_flag = !clear_flag;
 		end
 		else
@@ -100,18 +113,18 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			begin
 				prev_pulse_captured <= pulse_captured;
 				
-				if(light_source_flag)
+				if(light_source_capture_flag)
 				begin
-					if(pulse_count < {32{1'b1}})
+					if(add_count < {32{1'b1}})
 					begin
-						pulse_count <= pulse_count + 1;
+						add_count <= add_count + 1;
 					end
 				end
 				else
 				begin  
-					if(pulse_count > 0)
+					if(subtract_count < {32{1'b1}})
 					begin
-						pulse_count <= pulse_count - 1;
+						subtract_count <= subtract_count + 1;
 					end
 				end
 			end
