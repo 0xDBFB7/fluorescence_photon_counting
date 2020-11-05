@@ -22,7 +22,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000 * 1;
+	reg [31:0] integration_time = 32'd50000000 * 5;
 	
 	reg [31:0] light_modulation_period = 32'd5000;
 
