@@ -1,0 +1,5 @@
+*
+!.gitignore
+!fluorescence_FPGA.v
+!fluorescence_FPGA.qsf
+!clocks.sdc

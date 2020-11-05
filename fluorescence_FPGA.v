@@ -4,12 +4,13 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 
 	
 	reg [31:0] integration_timer= 0;	
+
 	reg [31:0] light_modulation_timer = 0;	
 
-//	reg [31:0] pulse_count = 0;	
-
-   reg [31:0] add_count = 0;	
-	reg [31:0] subtract_count = 0;
+	reg [31:0] pulse_count = 0;	
+//
+//   reg [31:0] add_count = 0;	
+//	reg [31:0] subtract_count = 0;
 	
 	reg [31:0] pulse_out_accumulator= 0;
 	
@@ -22,11 +23,12 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000 * 5;
+	reg [31:0] integration_time = 32'd50000000 * 1;
 	
-	reg [31:0] light_modulation_period = 32'd5000;
+	reg [31:0] light_modulation_period = 32'd500000;
 
-	assign LEDs = add_count;
+//	assign LEDs = add_count;
+	assign LEDs = 0;
 	
 	
 	reg light_source_flag = 0;
@@ -93,19 +95,21 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		if(integration_timer >= integration_time-1)
 		begin 
 			integration_timer <= 32'd0;
-			if(add_count >= subtract_count)
-			begin
-				pulse_out_accumulator<= add_count - subtract_count;
-			end
-			else
-			begin
-				pulse_out_accumulator <= 0;
-			end
-			
-			add_count <= 0;
-			subtract_count <= 0;
+//			if(add_count >= subtract_count)
+//			begin
+//			pulse_out_accumulator<= add_count;
+//			subtract_out_accumulator<= add_count;
+			pulse_out_accumulator <= pulse_count;
+//			end
+//			else
+//			begin
+//				pulse_out_accumulator <= 0;
+//			end
+//			
+//			add_count <= 0;
+//			subtract_count <= 0;
 
-			clear_flag = !clear_flag;
+			pulse_count <= integration_time/2;
 		end
 		else
 		begin
@@ -132,12 +136,17 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		
 		
 		pulse_out <= (pulse_out_accumulator > 0);
+//		pulse_out <= (pulse_out_accumulator > 0);
 
 		if(pulse_out_accumulator > 0)
 		begin
 			pulse_out_accumulator <= pulse_out_accumulator - 1;
 		end
 		
+		if(pulse_out_accumulator > 0)
+		begin
+			subtract_out_accumulator <= pulse_out_accumulator - 1;
+		end
 		
 	end
 
