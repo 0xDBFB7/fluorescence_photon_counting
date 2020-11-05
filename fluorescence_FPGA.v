@@ -1,77 +1,123 @@
 
 
-module fluorescence_FPGA(PMT_in,light_source_pin);
+module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, LEDs);
 
+	
+	reg [31:0] integration_timer= 0;	
+	reg [31:0] light_modulation_timer = 0;	
 
-	reg [32:0] clock = 0;	
-	reg [32:0] count = 0;	
-	reg [32:0] subtract_count = 0;
-	reg [32:0] add_count = 0;
-	input PMT_in;
+	reg [31:0] pulse_count = 0;	
+	reg [31:0] subtract_count = 0;
+	reg [31:0] add_count = 0;
+	reg [31:0] pulse_out_accumulator= 0;
+	
+	output [7:0] LEDs;
+	
+	input PMT_in; //GPIO_01 PIN_C3
+	input clock_50_mhz; //CLOCK_50 PIN_R8
+	output light_source_pin; //GPIO_00 PIN_D3 
+	output pulse_out_pin;
+	
+	reg pulse_out = 0;
+	
+	reg [31:0] integration_time = 32'd50000000;
+	
+	reg [31:0] light_modulation_period = 32'd5000;
+
+	assign LEDs = pulse_count;
+	
+	
 	reg light_source_flag = 0;
 	
-	output light_source_pin;
+	assign pulse_out_pin = pulse_out;
 	
-	assign light_source_pin = light_source_flag;
-	
-	always @(posedge PMT_in)
-	begin
-		if(light_source_flag)
-		begin
-			
-		end
-	end
-		
-	always @(posedge PMT_in)
-	begin
-	end
+	reg previous_clear_flag = 0;
 
 	
+	always @(posedge PMT_in)
+	begin
+		if(PMT_in)
+		begin
+			if(light_source_flag)
+			begin
+				if(pulse_count < {32{1'b1}})
+				begin
+					pulse_count <= pulse_count + 1;
+				end
+			end
+			else
+			begin  
+				if(pulse_count > 0)
+				begin
+					pulse_count <= pulse_count - 1;
+				end
+			end
+		end
+		else
+		begin
+			if(clear_flag == previous_clear_flag)
+			begin
+				previous_clear_flag = !clear_flag;
+				pulse_count <=0;
+			end
+		end
+		
+	end
 	
-//	output [6:0] HEX1_display;
-//	output [6:0] HEX2_display;
-//
-//	wire[3:0] low_bytes;
-//	wire[3:0] high_bytes;
-//
-//	input clock_in;
-//	wire clock_out;
-//	input reset;
-//
-//	output clock_view;
-//
-//
-//	reg previous_reset_flag = 0;
-//
-//	always @(posedge clock_in)
-//	begin
-//
-//		if(previous_reset_flag && reset) //edge detector
-//			previous_reset_flag <= 0;
-//
-//			
-//		if(!reset && !previous_reset_flag)
-//		begin
-//			count <= 24;
-//			clock_count <= 32'd0;
-//			previous_reset_flag <= 1;
-//		end
-//		
-//		else
-//		begin
-//			clock_count <= clock_count + 32'd1;
-//			if ((clock_count >= D-1) && count > 0)
-//			begin
-//				count <= count - 1;
-//				clock_count <= 32'd0;
-//			end
-//		end
-//
-//	
-//	end
+	
+	always @(posedge clock_50_mhz)
+	begin
+		light_modulation_timer <= light_modulation_timer + 32'd1;
+		
+		if(light_modulation_timer >= light_modulation_period-1)
+		begin 
+			light_modulation_timer <= 32'd0;
+			light_source_flag <= !light_source_flag;
+		end	
+	end
+	
+	
+	
+	/*
+	Integration time handler
+	*/
+	
+	assign light_source_pin = light_source_flag;
+
+	reg clear_flag = 0;
+
+	
+	always @(posedge clock_50_mhz)
+	begin
+		integration_timer <= integration_timer + 32'd1;
+		
+		
+		if(integration_timer >= integration_time-1)
+		begin 
+			integration_timer <= 32'd0;
+			pulse_out_accumulator= pulse_count;
+			clear_flag = !clear_flag;
+		end
+		
+		
+		
+		pulse_out <= (pulse_out_accumulator > 0);
+
+		if(pulse_out_accumulator > 0)
+		begin
+			pulse_out_accumulator <= pulse_out_accumulator - 1;
+		end
+		
+		
+	end
+
 	
 	
 	
 endmodule
+
+
+//module display();
+
 
 
