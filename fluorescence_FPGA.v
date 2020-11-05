@@ -20,7 +20,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000;
+	reg [31:0] integration_time = 32'd50000000 * 5;
 	
 	reg [31:0] light_modulation_period = 32'd5000;
 
@@ -33,34 +33,24 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg previous_clear_flag = 0;
 
+	reg pulse_captured = 0;
+	reg prev_pulse_captured = 0;
+
 	
 	always @(posedge PMT_in)
 	begin
 		if(PMT_in)
 		begin
-			if(light_source_flag)
-			begin
-				if(pulse_count < {32{1'b1}})
-				begin
-					pulse_count <= pulse_count + 1;
-				end
-			end
-			else
-			begin  
-				if(pulse_count > 0)
-				begin
-					pulse_count <= pulse_count - 1;
-				end
-			end
+			pulse_captured = !pulse_captured;
 		end
-		else
-		begin
-			if(clear_flag == previous_clear_flag)
-			begin
-				previous_clear_flag = !clear_flag;
-				pulse_count <=0;
-			end
-		end
+//		else
+//		begin
+//			if(clear_flag == previous_clear_flag)
+//			begin
+//				previous_clear_flag = !clear_flag;
+//				pulse_count <=0;
+//			end
+//		end
 		
 	end
 	
@@ -87,18 +77,45 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg clear_flag = 0;
 
 	
+	
 	always @(posedge clock_50_mhz)
 	begin
+	
+		
+	
+	
 		integration_timer <= integration_timer + 32'd1;
 		
 		
 		if(integration_timer >= integration_time-1)
 		begin 
 			integration_timer <= 32'd0;
-			pulse_out_accumulator= pulse_count;
+			pulse_out_accumulator<= pulse_count;
+			pulse_count <= 0;
 			clear_flag = !clear_flag;
 		end
-		
+		else
+		begin
+			if(pulse_captured != prev_pulse_captured)
+			begin
+				prev_pulse_captured <= pulse_captured;
+				
+				if(light_source_flag)
+				begin
+					if(pulse_count < {32{1'b1}})
+					begin
+						pulse_count <= pulse_count + 1;
+					end
+				end
+				else
+				begin  
+					if(pulse_count > 0)
+					begin
+						pulse_count <= pulse_count - 1;
+					end
+				end
+			end
+		end
 		
 		
 		pulse_out <= (pulse_out_accumulator > 0);
