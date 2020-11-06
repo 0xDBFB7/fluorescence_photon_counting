@@ -40,6 +40,41 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source_clk (s_ena), // source_clk.clk
 		.probe      (pulse_subtracted_signed_value)       //     probes.probe
 	);
+		altsource_probe_top #(
+		.sld_auto_instance_index ("YES"),
+		.sld_instance_index      (1),
+		.instance_id             ("addc"),
+		.probe_width             (32),
+		.source_width            (32),
+		.source_initial_value    ("0"),
+		.enable_metastability    ("YES")
+	) in_system_sources_probes_1 (
+		.source     (blank2),     //    sources.source
+		.source_ena (s_clk), //           .source_ena
+		.source_clk (s_ena), // source_clk.clk
+		.probe      (add_count)       //     probes.probe
+	);
+		altsource_probe_top #(
+		.sld_auto_instance_index ("YES"),
+		.sld_instance_index      (2),
+		.instance_id             ("subc"),
+		.probe_width             (32),
+		.source_width            (32),
+		.source_initial_value    ("0"),
+		.enable_metastability    ("YES")
+	) in_system_sources_probes_2 (
+		.source     (blank2),     //    sources.source
+		.source_ena (s_clk), //           .source_ena
+		.source_clk (s_ena), // source_clk.clk
+		.probe      (subtract_count)       //     probes.probe
+	);
+	
+	
+	
+	
+	
+	
+	
 	
 	input PMT_in; //GPIO_01 PIN_C3
 	input clock_50_mhz; //CLOCK_50 PIN_R8
@@ -105,7 +140,10 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	assign light_source_pin = light_source_flag;
 
 	reg clear_flag = 0;
+	
+	reg just_integrated = 0;
 
+	
 	
 	
 	always @(posedge clock_50_mhz)
@@ -121,20 +159,26 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		begin 
 			integration_timer <= 32'd0;
 			pulse_subtracted_signed_value <= $signed(add_count) - $signed(subtract_count);
-			if(add_count >= subtract_count)
-			begin
-				pulse_out_accumulator<= add_count - subtract_count;
-			end
-			else
-			begin
-				pulse_out_accumulator <= 0;
-			end
+//			if(add_count >= subtract_count)
+//			begin
+//				pulse_out_accumulator<= add_count - subtract_count;
+//			end
+//			else
+//			begin
+//				pulse_out_accumulator <= 0;
+//			end
 			
+			just_integrated <= 1;
+		end
+		else if(just_integrated)
+		begin
 			add_count <= 0;
 			subtract_count <= 0;
+			just_integrated <= 0;
 		end
 		else
 		begin
+		/* might drop a pulse or mis-phase once per integration time. not a huge deal I don't think. */
 			if(pulse_captured != prev_pulse_captured)
 			begin
 				prev_pulse_captured <= pulse_captured;
@@ -156,13 +200,13 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			end
 		end
 		
-		
-		pulse_out <= (pulse_out_accumulator > 0);
-
-		if(pulse_out_accumulator > 0)
-		begin
-			pulse_out_accumulator <= pulse_out_accumulator - 1;
-		end
+//		
+//		pulse_out <= (pulse_out_accumulator > 0);
+//
+//		if(pulse_out_accumulator > 0)
+//		begin
+//			pulse_out_accumulator <= pulse_out_accumulator - 1;
+//		end
 		
 	end
 
