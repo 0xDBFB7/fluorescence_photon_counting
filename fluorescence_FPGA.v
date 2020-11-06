@@ -15,7 +15,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg [31:0] pulse_out_accumulator= 0;
 	
-	reg [31:0] pulse_subtracted_signed_value= 0;
+	reg signed [31:0] pulse_subtracted_signed_value= 0;
 	
 	output [7:0] LEDs;
 	
@@ -69,6 +69,20 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.probe      (subtract_count)       //     probes.probe
 	);
 	
+			altsource_probe_top #(
+		.sld_auto_instance_index ("YES"),
+		.sld_instance_index      (3),
+		.instance_id             ("pulc"),
+		.probe_width             (32),
+		.source_width            (32),
+		.source_initial_value    ("0"),
+		.enable_metastability    ("YES")
+	) in_system_sources_probes_3 (
+		.source     (blank2),     //    sources.source
+		.source_ena (s_clk), //           .source_ena
+		.source_clk (s_ena), // source_clk.clk
+		.probe      (pulse_count)       //     probes.probe
+	);
 	
 	
 	
@@ -159,6 +173,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		begin 
 			integration_timer <= 32'd0;
 			pulse_subtracted_signed_value <= $signed(add_count) - $signed(subtract_count);
+			pulse_count <= add_count;
 //			if(add_count >= subtract_count)
 //			begin
 //				pulse_out_accumulator<= add_count - subtract_count;
