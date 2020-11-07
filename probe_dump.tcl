@@ -1,7 +1,29 @@
-
+#See https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/qts/qts_qii53021.pdf
+#and https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/qts/qts_qii52003.pdf
 
 # run with ~/NAS/primary_a/Projects/fpga/prime/quartus/bin/quartus_stp_tcl
 # not quartus_sh
+
+proc pause {{message "Hit Enter to continue ==> "}} {
+    puts -nonewline $message
+    flush stdout
+    gets stdin
+}
+
+proc hex_to_signed {value} {
+  set sign [expr {($value & 0b10000000000000000000000000000000)}]
+  set mag  [expr {($value & 0b01111111111111111111111111111111)}]
+  if {$sign==0} {
+    set exp 0
+  } else {
+    set exp [expr -2**31]
+  }
+  set value [expr {$exp + $mag}]
+  return $value
+}
+#thanks Quantum0xE7 on SO!
+
+
 
 
 set usb [lindex [get_hardware_names] 0]
@@ -9,19 +31,69 @@ set device_name [lindex [get_device_names -hardware_name $usb] 0]
 
 start_insystem_source_probe -device_name $device_name -hardware_name $usb
 
-
-#set value [read_probe_data -instance_index 0];
-
-set value "11111111111111111111111111111111";
-
-#gets stdin someVar
-
-#$after 30000
-
-set outfile [open "report.out" w]
-binary scan [binary format B64 [format "%032s" $value]] W dec
-puts $outfile $dec
-close $outfile
+set output_filename "../eppenwolf/runs/fluorescence_testing/slide_0.csv"
 
 
-end_interactive_probe;
+set cuvette 0
+
+while {$cuvette < 8} {
+    pause "move to cuvette $cuvette and hit enter";
+
+    set previous_count_binary [read_probe_data -instance_index 0];
+    set count_binary [read_probe_data -instance_index 0];
+
+    while {$count_binary == $previous_count_binary} {
+        #wait for a fresh integration time
+        after 1000;
+        set count_binary [read_probe_data -instance_index 0];
+    }
+
+    set iter 0;
+    while {$iter < 3} {
+
+
+        set previous_count_binary [read_probe_data -instance_index 0];
+        while {$count_binary == $previous_count_binary} {
+            puts "Integrating..."
+            after 1000;
+            set count_binary [read_probe_data -instance_index 0];
+        }
+
+        set count [hex_to_signed $count_binary];
+
+        set addc [read_probe_data -instance_index 1];
+        set subc [read_probe_data -instance_index 2];
+        set pulc [read_probe_data -instance_index 3];
+
+        set outfile [open $output_filename a]
+
+        puts -nonewline $outfile $cuvette;
+        puts -nonewline $outfile ",";
+        puts -nonewline $outfile $count;
+        puts -nonewline $outfile ",";
+        puts -nonewline $outfile $addc;
+        puts -nonewline $outfile ",";
+        puts -nonewline $outfile $subc;
+        puts -nonewline $outfile ",";
+        puts -nonewline $outfile $pulc;
+        puts -nonewline $outfile "\n";
+
+        close $outfile; # no buffering
+
+        puts $count;
+
+        incr iter;
+
+    }
+
+
+    incr cuvette;
+}
+
+
+#set value "11111111111111111111111111111111";
+
+
+
+
+#end_interactive_probe;
