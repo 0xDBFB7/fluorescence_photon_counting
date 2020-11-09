@@ -97,7 +97,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000 * 30;
+	reg [31:0] integration_time = 32'd50000000 * 20;
 	
 	reg [31:0] light_modulation_period = 32'd500000;
 
@@ -174,14 +174,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			integration_timer <= 32'd0;
 			pulse_subtracted_signed_value <= $signed(add_count) - $signed(subtract_count);
 			pulse_count <= add_count;
-//			if(add_count >= subtract_count)
-//			begin
-//				pulse_out_accumulator<= add_count - subtract_count;
-//			end
-//			else
-//			begin
-//				pulse_out_accumulator <= 0;
-//			end
+
 			
 			add_count <= 0;
 			subtract_count <= 0;

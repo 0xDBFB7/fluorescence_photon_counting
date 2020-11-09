@@ -59,7 +59,10 @@ while {$cuvette < 8} {
             set count_binary [read_probe_data -instance_index 0];
         }
 
-        set count [hex_to_signed $count_binary];
+        binary scan [binary format B64 [format "%064s" $count_binary]] W count_binary_scanned
+
+
+        set count [hex_to_signed $count_binary_scanned];
 
         set addc_bin [read_probe_data -instance_index 1];
         binary scan [binary format B64 [format "%064s" $addc_bin]] W addc
