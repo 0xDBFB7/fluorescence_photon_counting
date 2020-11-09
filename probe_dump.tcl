@@ -61,9 +61,13 @@ while {$cuvette < 8} {
 
         set count [hex_to_signed $count_binary];
 
-        set addc [read_probe_data -instance_index 1];
-        set subc [read_probe_data -instance_index 2];
-        set pulc [read_probe_data -instance_index 3];
+        set addc_bin [read_probe_data -instance_index 1];
+        binary scan [binary format B64 [format "%064s" $addc_bin]] W addc
+        set subc_bin [read_probe_data -instance_index 2];
+        binary scan [binary format B64 [format "%064s" $subc_bin]] W subc
+        set pulc_bin [read_probe_data -instance_index 3];
+        binary scan [binary format B64 [format "%064s" $pulc_bin]] W pulc
+
 
         set outfile [open $output_filename a]
 
