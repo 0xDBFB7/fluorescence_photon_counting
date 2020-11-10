@@ -31,7 +31,7 @@ set device_name [lindex [get_device_names -hardware_name $usb] 0]
 
 start_insystem_source_probe -device_name $device_name -hardware_name $usb
 
-set output_filename "../eppenwolf/runs/fluorescence_testing/slide_0.csv"
+set output_filename "../eppenwolf/runs/phage_experiment_6/fluorescence_slide_0.csv"
 
 
 set cuvette 0
