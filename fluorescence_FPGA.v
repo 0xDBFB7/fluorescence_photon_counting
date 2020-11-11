@@ -6,33 +6,35 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg [31:0] integration_timer= 0;	
 
 	reg [31:0] light_modulation_timer = 0;	
-
-	reg [31:0] pulse_count = 0;	
-	
 //
-   reg [31:0] add_count = 0;	
-	reg [31:0] subtract_count = 0;
+   reg [31:0] in_phase_add_count = 0;	
+	reg [31:0] in_phase_subtract_count = 0;
+	
+	reg [31:0] quadrature_add_count = 0;	
+	reg [31:0] quadrature_subtract_count = 0;
 	
 	reg [31:0] pulse_out_accumulator= 0;
 	
-	reg signed [31:0] pulse_subtracted_signed_value= 0;
+	reg signed [31:0] in_phase_subtracted_signed_value= 0;
+	reg signed [31:0] quadrature_subtracted_signed_value= 0;
+
+	reg [31:0] in_phase_count = 0;	
+	reg [31:0] quadrature_count = 0;
 	
 	output [7:0] LEDs;
 	
-	reg [31:0] blank2 = 0;
 
-	reg [31:0] blank = 0;
-
-	reg s_ena = 0;
-	reg s_clk = 0;
 	
 //	clkgen clock_generator(clock_50_mhz, in_phase_clock, quadrature_clock);
 	
-	
+	reg [31:0] blank2 = 0;
+	reg [31:0] blank = 0;
+	reg s_ena = 0;
+	reg s_clk = 0;
 	altsource_probe_top #(
 		.sld_auto_instance_index ("YES"),
 		.sld_instance_index      (0),
-		.instance_id             ("cnt"),
+		.instance_id             ("inpc"),
 		.probe_width             (32),
 		.source_width            (32),
 		.source_initial_value    ("0"),
@@ -41,12 +43,13 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source     (blank2),     //    sources.source
 		.source_ena (s_clk), //           .source_ena
 		.source_clk (s_ena), // source_clk.clk
-		.probe      (pulse_subtracted_signed_value)       //     probes.probe
+		.probe      (in_phase_subtracted_signed_value)       //     probes.probe
 	);
+	
 		altsource_probe_top #(
 		.sld_auto_instance_index ("YES"),
 		.sld_instance_index      (1),
-		.instance_id             ("addc"),
+		.instance_id             ("qadc"),
 		.probe_width             (32),
 		.source_width            (32),
 		.source_initial_value    ("0"),
@@ -55,12 +58,12 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source     (blank2),     //    sources.source
 		.source_ena (s_clk), //           .source_ena
 		.source_clk (s_ena), // source_clk.clk
-		.probe      (add_count)       //     probes.probe
+		.probe      (quadrature_subtracted_signed_value)       //     probes.probe
 	);
-		altsource_probe_top #(
+			altsource_probe_top #(
 		.sld_auto_instance_index ("YES"),
 		.sld_instance_index      (2),
-		.instance_id             ("subc"),
+		.instance_id             ("ipcn"),
 		.probe_width             (32),
 		.source_width            (32),
 		.source_initial_value    ("0"),
@@ -69,13 +72,12 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source     (blank2),     //    sources.source
 		.source_ena (s_clk), //           .source_ena
 		.source_clk (s_ena), // source_clk.clk
-		.probe      (subtract_count)       //     probes.probe
+		.probe      (in_phase_count)       //     probes.probe
 	);
-	
 			altsource_probe_top #(
 		.sld_auto_instance_index ("YES"),
 		.sld_instance_index      (3),
-		.instance_id             ("pulc"),
+		.instance_id             ("qacn"),
 		.probe_width             (32),
 		.source_width            (32),
 		.source_initial_value    ("0"),
@@ -84,8 +86,9 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source     (blank2),     //    sources.source
 		.source_ena (s_clk), //           .source_ena
 		.source_clk (s_ena), // source_clk.clk
-		.probe      (pulse_count)       //     probes.probe
+		.probe      (quadrature_count)       //     probes.probe
 	);
+	
 	
 	
 	
@@ -102,14 +105,13 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	localparam [31:0] main_clock_frequency = 32'd50000000;
 
-	reg [31:0] integration_time = main_clock_frequency * 30;
+	reg [31:0] integration_time = main_clock_frequency * 60;
 	
-	localparam [31:0] light_frequency = 1;
-	reg [31:0] light_modulation_period = ((main_clock_frequency*4)/light_frequency); // * 4
+	localparam [31:0] light_frequency = 100000;
+	reg [31:0] light_modulation_period = ((main_clock_frequency)/(light_frequency*2)); // * 4
 //	assign LEDs = add_count;
-//	assign LEDs = 0;
+	assign LEDs = 0;
 	
-	reg light_source_flag = 0;
 	
 	assign pulse_out_pin = pulse_out;
 	
@@ -117,14 +119,15 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 
 	reg pulse_captured = 0;
 	reg prev_pulse_captured = 0;
-	reg light_source_capture_flag = 0;
 	
 	always @(posedge PMT_in)
 	begin
 		if(PMT_in)
 		begin
 			pulse_captured <= !pulse_captured;
-			light_source_capture_flag <= light_source_flag;
+			in_phase_flag <= in_phase;
+			quadrature_flag <= quadrature;
+
 		end
 		
 	end
@@ -133,8 +136,13 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg in_phase = 0;
 	reg quadrature = 0;
 	
-	assign LEDs[0] = in_phase;
-	assign LEDs[1] = quadrature;
+	reg in_phase_flag = 0;
+	reg quadrature_flag = 0;
+	
+//	assign LEDs[0] = in_phase;
+//	assign LEDs[1] = quadrature;
+
+	reg light_source_flag = 0;
 
 	
 	always @(posedge clock_50_mhz)
@@ -152,28 +160,19 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	always @(posedge light_source_flag)
 	begin
-		in_phase <= ((!in_phase) && (!quadrature));
+		in_phase <= !in_phase;
 	end
 	
 	always @(negedge light_source_flag)
 	begin
-		quadrature <= in_phase;
+		quadrature <= !quadrature;
 	end
 	
 	
-	/*
-	Integration time handler
-	*/
+	assign light_source_pin = in_phase;
 	
-	assign light_source_pin = light_source_flag;
+	
 
-	reg clear_flag = 0;
-	
-	reg just_integrated = 0;
-
-	
-	
-	
 	always @(posedge clock_50_mhz)
 	begin
 	
@@ -186,12 +185,17 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		if(integration_timer >= integration_time-1)
 		begin 
 			integration_timer <= 32'd0;
-			pulse_subtracted_signed_value <= $signed(add_count) - $signed(subtract_count);
-			pulse_count <= add_count;
+			in_phase_subtracted_signed_value <= $signed(in_phase_add_count) - $signed(in_phase_subtract_count);
+			quadrature_subtracted_signed_value <= $signed(quadrature_add_count) - $signed(quadrature_subtract_count);
+
+			in_phase_count <= in_phase_add_count;
+			quadrature_count <= quadrature_add_count;
 
 			
-			add_count <= 0;
-			subtract_count <= 0;
+			in_phase_add_count <= 0;
+			in_phase_subtract_count <= 0;
+			quadrature_add_count <= 0;
+			quadrature_subtract_count <= 0;
 		end
 		else
 		begin
@@ -200,20 +204,37 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			begin
 				prev_pulse_captured <= pulse_captured;
 				
-				if(light_source_capture_flag)
+				if(in_phase_flag)
 				begin
-					if(add_count < {32{1'b1}})
+					if(in_phase_add_count < {32{1'b1}})
 					begin
-						add_count <= add_count + 1;
+						in_phase_add_count <= in_phase_add_count + 1;
 					end
 				end
 				else
 				begin  
-					if(subtract_count < {32{1'b1}})
+					if(in_phase_subtract_count < {32{1'b1}})
 					begin
-						subtract_count <= subtract_count + 1;
+						in_phase_subtract_count <= in_phase_subtract_count + 1;
 					end
 				end
+				
+				
+				if(quadrature_flag)
+				begin
+					if(quadrature_add_count < {32{1'b1}})
+					begin
+						quadrature_add_count <= quadrature_add_count + 1;
+					end
+				end
+				else
+				begin  
+					if(quadrature_subtract_count < {32{1'b1}})
+					begin
+						quadrature_subtract_count <= quadrature_subtract_count + 1;
+					end
+				end
+				
 			end
 		end
 		
