@@ -26,6 +26,9 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg s_ena = 0;
 	reg s_clk = 0;
 	
+//	clkgen clock_generator(clock_50_mhz, in_phase_clock, quadrature_clock);
+	
+	
 	altsource_probe_top #(
 		.sld_auto_instance_index ("YES"),
 		.sld_instance_index      (0),
@@ -97,13 +100,14 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	reg pulse_out = 0;
 	
-	reg [31:0] integration_time = 32'd50000000 * 30;
-	
-	reg [31:0] light_modulation_period = 32'd50000000;
+	localparam [31:0] main_clock_frequency = 32'd50000000;
 
-//	assign LEDs = add_count;
-	assign LEDs = 0;
+	reg [31:0] integration_time = main_clock_frequency * 30;
 	
+	localparam [31:0] light_frequency = 1;
+	reg [31:0] light_modulation_period = ((main_clock_frequency*4)/light_frequency); // * 4
+//	assign LEDs = add_count;
+//	assign LEDs = 0;
 	
 	reg light_source_flag = 0;
 	
@@ -122,29 +126,39 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			pulse_captured <= !pulse_captured;
 			light_source_capture_flag <= light_source_flag;
 		end
-//		else
-//		begin
-//			if(clear_flag == previous_clear_flag)
-//			begin
-//				previous_clear_flag = !clear_flag;
-//				pulse_count <=0;
-//			end
-//		end
 		
 	end
 	
 	
+	reg in_phase = 0;
+	reg quadrature = 0;
+	
+	assign LEDs[0] = in_phase;
+	assign LEDs[1] = quadrature;
+
+	
 	always @(posedge clock_50_mhz)
 	begin
+	 
+		
 		light_modulation_timer <= light_modulation_timer + 32'd1;
 		
-		if(light_modulation_timer >= light_modulation_period-1)
+		if(light_modulation_timer >= (light_modulation_period)-1)
 		begin 
 			light_modulation_timer <= 32'd0;
 			light_source_flag <= !light_source_flag;
 		end	
 	end
 	
+	always @(posedge light_source_flag)
+	begin
+		in_phase <= ((!in_phase) && (!quadrature));
+	end
+	
+	always @(negedge light_source_flag)
+	begin
+		quadrature <= in_phase;
+	end
 	
 	
 	/*
@@ -218,8 +232,6 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 endmodule
 
-
-//module display();
 
 
 
