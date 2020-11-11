@@ -24,8 +24,19 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	output [7:0] LEDs;
 	
 
+	reg [31:0] waveform [200:0]; 
+	reg [31:0] waveform_index; 
+	wire [31:0] current_waveform_value; 
+
+	assign current_waveform_value = waveform[waveform_index];
+
 	
-//	clkgen clock_generator(clock_50_mhz, in_phase_clock, quadrature_clock);
+
+	wire main_clock;
+	wire dummy;
+	//	assign main_clock = 
+	
+	clkgen clock_generator(clock_50_mhz, main_clock, dummy);
 	
 	reg [31:0] blank2 = 0;
 	reg [31:0] blank = 0;
@@ -88,7 +99,20 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		.source_clk (s_ena), // source_clk.clk
 		.probe      (quadrature_count)       //     probes.probe
 	);
-	
+		altsource_probe_top #(
+		.sld_auto_instance_index ("YES"),
+		.sld_instance_index      (3),
+		.instance_id             ("wfvl"),
+		.probe_width             (32),
+		.source_width            (32),
+		.source_initial_value    ("0"),
+		.enable_metastability    ("YES")
+	) in_system_sources_probes_4 (
+		.source     (blank2),     //    sources.source
+		.source_ena (s_clk), //           .source_ena
+		.source_clk (s_ena), // source_clk.clk
+		.probe      (current_waveform_value)       //     probes.probe
+	);
 	
 	
 	
@@ -120,6 +144,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg pulse_captured = 0;
 	reg prev_pulse_captured = 0;
 	
+	
 	always @(posedge PMT_in)
 	begin
 		if(PMT_in)
@@ -127,7 +152,6 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			pulse_captured <= !pulse_captured;
 			in_phase_flag <= in_phase;
 			quadrature_flag <= quadrature;
-
 		end
 		
 	end
@@ -145,7 +169,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg light_source_flag = 0;
 
 	
-	always @(posedge clock_50_mhz)
+	always @(posedge main_clock)
 	begin
 	 
 		
@@ -158,30 +182,31 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 		end	
 	end
 	
-	always @(posedge light_source_flag)
-	begin
-		in_phase <= !in_phase;
-	end
-	
-	always @(negedge light_source_flag)
-	begin
-		quadrature <= !quadrature;
-	end
-	
-	
-	assign light_source_pin = in_phase;
+//	always @(posedge light_source_flag)
+//	begin
+//		in_phase <= !in_phase;
+//	end
+//	
+//	always @(negedge light_source_flag)
+//	begin
+//		quadrature <= !quadrature;
+//	end
+//	
+
+	assign light_source_pin = light_source_flag;
 	
 	
 
-	always @(posedge clock_50_mhz)
+	always @(posedge main_clock)
 	begin
 	
-		
-	
-	
+
 		integration_timer <= integration_timer + 32'd1;
 		
-		
+		waveform[integration_timer] <= integration_timer;
+	
+		waveform_index <= waveform_index + 1;
+	
 		if(integration_timer >= integration_time-1)
 		begin 
 			integration_timer <= 32'd0;
@@ -191,6 +216,9 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			in_phase_count <= in_phase_add_count;
 			quadrature_count <= quadrature_add_count;
 
+			waveform[integration_timer] = 0;
+
+			
 			
 			in_phase_add_count <= 0;
 			in_phase_subtract_count <= 0;
@@ -238,13 +266,8 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			end
 		end
 		
-//		
-//		pulse_out <= (pulse_out_accumulator > 0);
-//
-//		if(pulse_out_accumulator > 0)
-//		begin
-//			pulse_out_accumulator <= pulse_out_accumulator - 1;
-//		end
+
+		
 		
 	end
 
