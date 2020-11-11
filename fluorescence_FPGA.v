@@ -23,9 +23,9 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	output [7:0] LEDs;
 	
 
-	localparam [31:0] num_waveform_samples = 20;
+	localparam [31:0] num_waveform_samples = 40;
 
-	reg [8:0] waveform [(num_waveform_samples-1):0]; 
+	reg [31:0] waveform [(num_waveform_samples-1):0]; 
 	reg [31:0] readout_waveform_index; 
 	wire [31:0] current_waveform_value; 
 
@@ -160,6 +160,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	reg prev_pulse_captured = 0;
 	reg [31:0] light_timer_flag = 0;	
 
+
 	
 	always @(posedge PMT_in)
 	begin
@@ -169,11 +170,18 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 			in_phase_flag <= in_phase;
 			quadrature_flag <= quadrature;
 			light_timer_flag <= light_timer;
+			
+			if((light_timer_flag >= gate_begin) && (light_timer_flag < gate_end) && !reading_out)
+			begin
+				temp <= waveform[pulse_timer_flag_idx] + 1;
+			end
+
 		end
 		
 	end
 	
 	wire [31:0] pulse_timer_flag_idx ;
+
 	assign pulse_timer_flag_idx = light_timer_flag - gate_begin;
 	
 	reg in_phase = 0;
@@ -300,8 +308,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 				if((light_timer_flag >= gate_begin) && (light_timer_flag < gate_end) && !reading_out)
 				begin
 					//waveform is captured in the second quadrant.
-					temp = waveform[pulse_timer_flag_idx];
-					waveform[pulse_timer_flag_idx] = temp + 1;
+					waveform[pulse_timer_flag_idx] <= temp;
 				end
 				
 				
@@ -310,7 +317,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 		if(reading_out && readout_waveform_index > 0)
 		begin
-			waveform[readout_waveform_index - 1] = 9'd0;
+			waveform[readout_waveform_index - 1] = 32'd0;
 		end
 		
 	end
