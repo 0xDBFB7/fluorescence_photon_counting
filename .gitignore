@@ -5,3 +5,5 @@
 !clocks.sdc
 !monitor.py
 !probe_dump.tcl
+!IQviewer.tcl
+!waveformviewer.tcl
