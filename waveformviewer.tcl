@@ -35,7 +35,7 @@ start_insystem_source_probe -device_name $device_name -hardware_name $usb
 set output_filename "../eppenwolf/runs/phage_experiment_7/fluorescence_slide_1.csv"
 
 
-set num_waveform_samples 98
+set num_waveform_samples 18
 
 
 
