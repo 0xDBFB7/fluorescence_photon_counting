@@ -33,7 +33,7 @@ start_insystem_source_probe -device_name $device_name -hardware_name $usb
 
 set output_filename "../eppenwolf/runs/phage_experiment_6/fluorescence_slide_1.csv"
 
-array set  {}
+array set waveform {}
 
 
 while {1} {
