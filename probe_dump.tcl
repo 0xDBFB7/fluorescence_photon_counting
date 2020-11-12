@@ -59,35 +59,41 @@ while {$cuvette < 8} {
             set count_binary [read_probe_data -instance_index 0];
         }
 
-        binary scan [binary format B64 [format "%064s" $count_binary]] W count_binary_scanned
+        set I_count_binary [read_probe_data -instance_index 0];
+        set Q_count_binary [read_probe_data -instance_index 1];
+        set ipcn_binary [read_probe_data -instance_index 2];
+        set qacn_binary [read_probe_data -instance_index 3];
 
+        binary scan [binary format B64 [format "%064s" $I_count_binary]] W I_count_binary_scanned
+        binary scan [binary format B64 [format "%064s" $Q_count_binary]] W Q_count_binary_scanned
+        binary scan [binary format B64 [format "%064s" $ipcn]] W ipcn_binary_scanned
+        binary scan [binary format B64 [format "%064s" $qacn]] W qacn_binary_scanned
 
-        set count [hex_to_signed $count_binary_scanned];
+        set I_count [hex_to_signed $I_count_binary_scanned];
+        set Q_count [hex_to_signed $Q_count_binary_scanned];
+        set ipcn [hex_to_signed $ipcn_binary_scanned];
+        set qacn [hex_to_signed $qacn_binary_scanned];
 
-        set addc_bin [read_probe_data -instance_index 1];
-        binary scan [binary format B64 [format "%064s" $addc_bin]] W addc
-        set subc_bin [read_probe_data -instance_index 2];
-        binary scan [binary format B64 [format "%064s" $subc_bin]] W subc
-        set pulc_bin [read_probe_data -instance_index 3];
-        binary scan [binary format B64 [format "%064s" $pulc_bin]] W pulc
+        set mag [expr { sqrt((double($I_count)*double($I_count)) + (double($Q_count)*double($Q_count))) } ];
+        set phase [expr {  atan( $Q_count / double($I_count)) }];
 
 
         set outfile [open $output_filename a]
 
         puts -nonewline $outfile $cuvette;
         puts -nonewline $outfile ",";
-        puts -nonewline $outfile $count;
+        puts -nonewline $outfile $I_count;
         puts -nonewline $outfile ",";
-        puts -nonewline $outfile $addc;
+        puts -nonewline $outfile $Q_count;
         puts -nonewline $outfile ",";
-        puts -nonewline $outfile $subc;
+        puts -nonewline $outfile $ipcn;
         puts -nonewline $outfile ",";
-        puts -nonewline $outfile $pulc;
+        puts -nonewline $outfile $qacn;
         puts -nonewline $outfile "\n";
 
         close $outfile; # no buffering
 
-        puts $count;
+        puts $I_count;
 
         incr iter;
 
