@@ -38,14 +38,6 @@ array set waveform {}
 
 while {1} {
 
-    set t 0;
-    while {1} {
-        set I_count_binary [read_probe_data -instance_index 0];
-        incr t;
-        puts $t;
-        puts [clock microseconds];
-    }
-
     set previous_count_binary [read_probe_data -instance_index 0];
     set I_count_binary [read_probe_data -instance_index 0];
 
