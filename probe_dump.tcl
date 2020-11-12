@@ -1,7 +1,7 @@
 #See https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/qts/qts_qii53021.pdf
 #and https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/qts/qts_qii52003.pdf
 
-# run with ~/NAS/primary_a/Projects/fpga/prime/quartus/bin/quartus_stp_tcl
+# run with ~/NAS/primary_a/Projects/fpga/prime/quartus/bin/quartus_stp_tcl  -t probe_dump.tcl
 # not quartus_sh
 
 proc pause {{message "Hit Enter to continue ==> "}} {
@@ -31,7 +31,7 @@ set device_name [lindex [get_device_names -hardware_name $usb] 0]
 
 start_insystem_source_probe -device_name $device_name -hardware_name $usb
 
-set output_filename "../eppenwolf/runs/phage_experiment_7/fluorescence_slide_1.csv"
+set output_filename "../eppenwolf/runs/phage_experiment_7/fluorescence_slide_0.csv"
 
 
 set cuvette 0
