@@ -66,13 +66,11 @@ while {$cuvette < 8} {
 
         binary scan [binary format B64 [format "%064s" $I_count_binary]] W I_count_binary_scanned
         binary scan [binary format B64 [format "%064s" $Q_count_binary]] W Q_count_binary_scanned
-        binary scan [binary format B64 [format "%064s" $ipcn]] W ipcn_binary_scanned
-        binary scan [binary format B64 [format "%064s" $qacn]] W qacn_binary_scanned
+        binary scan [binary format B64 [format "%064s" $ipcn_binary]] W ipcn
+        binary scan [binary format B64 [format "%064s" $qacn_binary]] W qacn
 
         set I_count [hex_to_signed $I_count_binary_scanned];
         set Q_count [hex_to_signed $Q_count_binary_scanned];
-        set ipcn [hex_to_signed $ipcn_binary_scanned];
-        set qacn [hex_to_signed $qacn_binary_scanned];
 
         set mag [expr { sqrt((double($I_count)*double($I_count)) + (double($Q_count)*double($Q_count))) } ];
         set phase [expr {  atan( $Q_count / double($I_count)) }];
@@ -89,6 +87,10 @@ while {$cuvette < 8} {
         puts -nonewline $outfile $ipcn;
         puts -nonewline $outfile ",";
         puts -nonewline $outfile $qacn;
+        puts -nonewline $outfile ",";
+        puts -nonewline $outfile $mag;
+        #puts -nonewline $outfile ",";
+        #puts -nonewline $outfile $phase;
         puts -nonewline $outfile "\n";
 
         close $outfile; # no buffering
