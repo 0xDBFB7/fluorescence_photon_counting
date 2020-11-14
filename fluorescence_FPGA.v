@@ -144,7 +144,7 @@ module fluorescence_FPGA(PMT_in, light_source_pin, clock_50_mhz, pulse_out_pin, 
 	
 	localparam [63:0] main_clock_frequency = 32'd50000000;
 
-	localparam [63:0] integration_time = main_clock_frequency * 60;
+	localparam [63:0] integration_time = main_clock_frequency * 10;
 	
 	localparam [31:0] light_frequency = 100000;
 	localparam [31:0] light_modulation_period = ((main_clock_frequency)/(light_frequency)); // * 4
