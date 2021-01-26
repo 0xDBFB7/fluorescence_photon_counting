@@ -4,6 +4,8 @@
 # run with ~/NAS/primary_a/Projects/fpga/prime/quartus/bin/quartus_stp_tcl
 # not quartus_sh
 
+# ~/NAS/primary_a/Projects/fpga/prime/quartus/bin/quartus_stp_tcl -t IQviewer.tcl
+
 proc pause {{message "Hit Enter to continue ==> "}} {
     puts -nonewline $message
     flush stdout
