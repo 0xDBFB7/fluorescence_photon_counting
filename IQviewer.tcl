@@ -66,7 +66,7 @@ while {1} {
     #set addc_bin [read_probe_data -instance_index 1];
     #binary scan [binary format B64 [format "%064s" $addc_bin]] W addc
 
-
+    pause;
 
 
 
