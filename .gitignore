@@ -1,0 +1,9 @@
+*
+!.gitignore
+!fluorescence_FPGA.v
+!fluorescence_FPGA.qsf
+!clocks.sdc
+!monitor.py
+!probe_dump.tcl
+!IQviewer.tcl
+!waveformviewer.tcl
