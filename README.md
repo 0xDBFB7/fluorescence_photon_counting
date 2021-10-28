@@ -2,8 +2,37 @@
 bibliography: ../../documents/references.bib
 ---
 
-Amplification-free fluorescent nucleic acid detection via synchronous photon counting
-=====================================================================================
+-   [Amplification-free fluorescent nucleic acid detection via
+    synchronous photon
+    counting](#amplification-free-fluorescent-nucleic-acid-detection-via-synchronous-photon-counting)
+    -   [Executive summary](#executive-summary)
+    -   [Initial state](#initial-state)
+    -   [Review](#review)
+    -   [Flurophore](#flurophore)
+    -   [Simple CMOS image stacking
+        detection](#simple-cmos-image-stacking-detection)
+        -   [[@Image2012]](#section)
+    -   [Photomultiplier photon wavelength
+        discrimination](#photomultiplier-photon-wavelength-discrimination)
+    -   [Possible artifacts and deficiencies in
+        ](#possible-artifacts-and-deficiencies-in)
+    -   [Preparation and use](#preparation-and-use)
+    -   [Cuvette](#cuvette)
+    -   [Light source](#light-source)
+        -   [Diode laser tests](#diode-laser-tests)
+    -   [Filters](#filters)
+        -   [Excitation filter used](#excitation-filter-used)
+        -   [Emission filters used](#emission-filters-used)
+        -   [Gel filter](#gel-filter)
+    -   [Electronics](#electronics)
+    -   [Time-domain or time-correlated photon
+        counting](#time-domain-or-time-correlated-photon-counting)
+    -   [Performance and
+        characteristics](#performance-and-characteristics)
+    -   [Literature review](#literature-review)
+        -   [[@Instrument1957]](#section-1)
+
+# Amplification-free fluorescent nucleic acid detection via synchronous photon counting
 
 ![image](fluorescence/fluro_1){width="\\textwidth"}
 
@@ -17,13 +46,11 @@ Amplification-free fluorescent nucleic acid detection via synchronous photon cou
 
 Quartus Prime 18.1 Lite edition
 
-Executive summary
------------------
+## Executive summary
 
 Cuvette should be opaque or white to avoid autofluro;
 
-Initial state
--------------
+## Initial state
 
 real-time
 
@@ -47,8 +74,8 @@ emission light turns on. This doesn't subtract effects like the
 excitation light from filter leakage
 
 Conveniently, T4r has an extraordinarily large genome of approximately
-172 kBp dsDNA(); each virion therefore For comparison, a fingerprint has
-between 0.042 and 0.14 ng of DNA ().
+172 kBp dsDNA[@Structure2014]; each virion therefore For comparison, a
+fingerprint has between 0.042 and 0.14 ng of DNA [@DNA2019].
 
 While these quantities are small, it is not particularly challenging,
 and it is not our intention to suggest that this is a good design; we
@@ -57,15 +84,15 @@ are . The similar performance despite extremely high detector
 sensitivity is probably due to the small light-collecting area due to
 the objective, and
 
-Review
-------
+## Review
 
-() quantifies adenovirus titer with a ssDNA 4.7 kbase genome.
+[@Quantification2020] quantifies adenovirus titer with a ssDNA 4.7 kbase
+genome.
 
 With a GelRed dye and 528/20 (note: BioTek filters are specified as
 center wavelength / FWHM).
 
-() () offer excellent
+[@SYBR2012] [@Characterization2010] offer excellent
 
 We show that both fluorescence and the excited state lifetime of SG
 dramatically increase in viscous solvents, demonstrating an approximate
@@ -89,7 +116,9 @@ bioeffects field.
 Somewhat more challenging than viewing PCR output on a gel, since the
 total quantity of DNA involved is quite low
 
+::: autem
 extra credit: how many photons are released?
+:::
 
 Unlike luminescence techniques, lock-in is possible
 
@@ -97,8 +126,7 @@ Xu et al use
 
 Gel-Doc
 
-Flurophore
-----------
+## Flurophore
 
 the prototypical stain is Ethidium Bromide, but is challenging to obtain
 outside certain laboratories. GelGreen is safe, very stable against
@@ -129,15 +157,15 @@ flurophores intercalate into the DNA the fluorescence is weaker.
 
 GelGreen is also sensitive to ssDNA and ssRNA but with 5 times lower
 efficiency. GelGreen absorbs maximally at 272 nm and 507 nm and emits
-maximally at 528 nm.()
+maximally at 528 nm.[@GelGreen]
 
 ![Biotium GelRed/GelGreen fluorescence spectra. Credit Biotium Inc,
 reproduced without permission.](gelred_gelgreen){width="50%"}
 
-Simple CMOS image stacking detection
-------------------------------------
+## Simple CMOS image stacking detection
 
-### ()
+::: @empty
+### [@Image2012] {#section}
 
 florescein An f1.2 lens is used.
 
@@ -145,11 +173,14 @@ Notably, contrary to most arrangments, the excitation light was input
 through the transparent bottom of the sample holders. They report that
 \"the limiting factor is the \[filter leakage; in their paper they refer
 to this as noise, distinct from image sensor noise\]\".
+:::
 
 An incidental advantage is that a color filter makes it easy to diagnose
 issues with the light path. It is clear whether background,
 
+::: toolchain
 Lesson learned: color feedback
+:::
 
 a 30-s exposure on a cheap camera also almost got there.
 
@@ -159,24 +190,23 @@ with an OV9712 sensor was used. guvcview to capture.
 From luminescent techniques reported previously, DSLR sensors with long
 exposure times are sensitive
 
-from \[\], using ImageJ () to stack. works great on cheap cmos cameras -
-interestingly doesn't work at all on more expensive cameras. - almost
-good enough - great for diagnostics
+from \[\], using ImageJ [@NIH2012] to stack. works great on cheap cmos
+cameras - interestingly doesn't work at all on more expensive cameras. -
+almost good enough - great for diagnostics
 
 interestingly, the fact that the camera has color is quite valuable;
 filtering the green out can increase sensitivity a lot
 
-Photomultiplier photon wavelength discrimination
-------------------------------------------------
+## Photomultiplier photon wavelength discrimination
 
 Anyone familiar with photomultiplier tube use with
 
 lest you think I know what I'm talking about, I laboured under the
 assumption that the pulse height somehwo
 
-() \"The photomultiplier tube outputs an electrical charge in proportion
-to the amount of this scintllation, as a result, the output pulse height
-from the photomultiplier \"
+[@PMT2007] \"The photomultiplier tube outputs an electrical charge in
+proportion to the amount of this scintllation, as a result, the output
+pulse height from the photomultiplier \"
 
 \"Does anyone know of a circuit that can discriminate color PMT\"?
 
@@ -193,8 +223,7 @@ fast diode thresholding might work
 
 use one of the stm32f0 boards with comparators
 
-Possible artifacts and deficiencies in 
---------------------------------------
+## Possible artifacts and deficiencies in 
 
 This arrangement is patently unsuitable for producing scientific
 results, as it has not even been calibrated against a DNA ladder.
@@ -202,19 +231,18 @@ Positive control samples were generated by cracking phage capsids of a
 known titer in an autoclave and then mixing 1:1 with 1/4000 GelGreen. If
 some other process
 
-The sample passed through a microfludic channel.[^2] Adsorption
+The sample passed through a microfludic channel [^2]. Adsorption
 
 Instruments should not produce a continuous stream of results.
 
-Preparation and use
--------------------
+## Preparation and use
 
 Undiluted GelGreen fluorophore (delivered at 10,000x concentration in a
 neat little screw-cap) was kept at room temperature as advised (to
 prevent crystallization or precipitation)[^3]. The fluorophore stock
 solution was prepared by diluting 2.5 microliters of GelGreen in 10 mL
 distilled water in a 15 mL screw-cap Falcon tube (McMaster-Carr
-\#7979T33) producing a weakly orange solution of \"1/4000\" dilution and
+#7979T33) producing a weakly orange solution of \"1/4000\" dilution and
 stored at room temperature. Both were kept in light-tight metallized
 bags when not in use.
 
@@ -225,8 +253,7 @@ The autosampler withdrew approximately 50 microliters of mixed solution
 from the 0.4 mL stock tube (referred to as PG1), which was then injected
 into an empty 1.5 mL empty sample tube. quantified.
 
-Cuvette
--------
+## Cuvette
 
 The custom 1 microliter slide cuvette used for initial testing was CNC
 machined from 3 mm transparent Lexan-brand polycarbonate[^4]. After much
@@ -235,8 +262,8 @@ very highly auto-fluorescent and completely overwhelmed the meagre DNA
 signal. This occurred with a separate coupon of Lexan, but was not
 observed with clear acrylic or polycarbonate. . That said, it has been
 reported that polycarbonate does not auto-fluoresce significantly more
-than acrylic (), so it is possible that some other effect led to this
-result.
+than acrylic [@autofluorescence2006], so it is possible that some other
+effect led to this result.
 
 1.5 mL Eppendorf-type clear polypropylene microcentrifuge tubes
 (Carolina Premium Sterile Centrifuge tubes, 215245, believed to be MTC
@@ -246,10 +273,11 @@ Microwell plates used for luminescence are usually opaque white to
 reflect the few precious photons: fluorescence plates are typically
 opaque black.
 
+::: toolchain
 Lesson learned: beware autofluorescence
+:::
 
-Light source
-------------
+## Light source
 
 Argon-gas lasers emit several closely-spaced lines in the visible
 spectrum, the most prominent of which is at 488 nm.
@@ -263,7 +291,7 @@ coherent?)
 
 lasers are available.
 
-() recommends
+[@Pulsed2010] recommends
 
 ### Diode laser tests
 
@@ -297,13 +325,14 @@ too strong.
 
 Arranging the light source physically at right angles can be
 challenging. Using a plastic fiber optic assists in positioning
-\"because of the small numerical aperture\". The fiber optic ()
+\"because of the small numerical aperture\". The fiber optic
+[@vurek1982nanoliter]
 
 Even a blue LED is visibly green through a
 
 Arranging the light source and detector optical paths at right angles is
 the first line of defense against excitation light bleed-through. In
-testing, is echoed by ()
+testing, is echoed by [@Optical2011]
 
 > Finally, it is possible to excite a sample from one side and collect
 > the fluorescence from the opposite side (Fig. 2.4.3D). While some
@@ -317,27 +346,27 @@ testing, is echoed by ()
 > wavelengths for light at higher angles of incidence, thus causing the
 > shifted emitter band to overlap with the excitation wavelength band.
 
-() \"These filters should also be specified to have very low ripple in
-the passband, since the narrow laser lines of some lasers (especially
-semiconductor diode lasers) can drift over time or with changing
-environmental conditions, thus resulting in fluctuations of the filtered
-laser power.\"
+[@Optical2011] \"These filters should also be specified to have very low
+ripple in the passband, since the narrow laser lines of some lasers
+(especially semiconductor diode lasers) can drift over time or with
+changing environmental conditions, thus resulting in fluctuations of the
+filtered laser power.\"
 
-Filters
--------
+## Filters
 
 Certainly the most critical aspect of any fluorescence technique is the
 filter set used.
 
 Important characteristics include transmission % inside the passband,
 optical density outside the passband, and sharp edges without long tails
-crossing the so-called Stokes shift() between absorption and emission.
-Some filters have ripple far from the edge of interest which must be
-taken into account when assessing the overall filtering performance.
+crossing the so-called Stokes shift[@Stokes2021] between absorption and
+emission. Some filters have ripple far from the edge of interest which
+must be taken into account when assessing the overall filtering
+performance.
 
-()
+[@reichman2000handbook]
 
-() contributes additional information
+[@Optical2011] contributes additional information
 
 Half-inch diameter laser line filters were used here for reasons of
 cost. As of this writing, a set of quality GFP filters costs about 4
@@ -372,6 +401,9 @@ Units reported as AU
 
 One filter, an
 
+::: center
+:::
+
 (486 nm is the $n=4$ Balmer line for hydrogen).
 
 (note; this was a limited-stock clearance item that has since been
@@ -388,13 +420,16 @@ tails are believed to be too long to be useable.
 
 Two filters in series, one:
 
+::: center
+:::
+
 Note the confusion that can occur when specifying passband width as
 $\pm$ versus FWHM.
 
 This is a long-pass edgepass filter. This is known as a Wratten or Gel
-filter; the \#16 is known as the Wratten number. () has a table of
-Wratten filter spectra; the cut-on wavelength (wavelength of 50%
-transmission) is 530 nm for the \#15 and 540 nm for the \#16 ($\pm$
+filter; the #16 is known as the Wratten number. [@lide2004crc] has a
+table of Wratten filter spectra; the cut-on wavelength (wavelength of
+50% transmission) is 530 nm for the #15 and 540 nm for the #16 ($\pm$
 circa 3 nm), with 90% maximum transmission. One layer of Kapton tape was
 wrapped around the filter to protect other optics from the sharp edges.
 
@@ -406,8 +441,7 @@ filters, especially the super-wide edge-pass ones; a lot of photons are
 lost that way, decreasing efficiency. However, it still appears to be
 more than sufficient.
 
-manuals for gel-docs typically suggest \#16 or \#15. SYBR recommends
-\#15.
+manuals for gel-docs typically suggest #16 or #15. SYBR recommends #15.
 
 For an even lower-cost system, orange or amber acrylic sheets (typically
 used for UV filtering) with similar filtering spectra (e.g. Acrylite
@@ -415,6 +449,9 @@ used for UV filtering) with similar filtering spectra (e.g. Acrylite
 instance.
 
 This does mean is filtered before entering the fiber optic.
+
+::: center
+:::
 
 in series with
 
@@ -449,21 +486,22 @@ The LED was about 3 cm away, and put through a  3 mm aperture in a piece
 of PVC pipe. The output from the filter was directly into the 1 mm
 fiber, itself improving the bandpass.
 
-Electronics
------------
+## Electronics
 
 ![image](fluorescence/PMT){width="\\textwidth"}
 
-Monitoring the output with a,[^5] a 100 ns switching time was typical. A
-modulation frequency of 1 MHz was achievable, but no
+Monitoring the output with a [^5], a 100 ns switching time was typical.
+A modulation frequency of 1 MHz was achievable, but no
 
 While drift in the power supply does not affect the background lock-in,
 it can affect run-to-run repeatability.
 
+::: toolchain
 Running FPGA designs at varying speeds helps to debug race-condition
-related bugs.[^6]
+related bugs. [^6]
+:::
 
-() ()
+[@Highspeed] [@273337]
 
 take note of potentiometer positions
 
@@ -497,8 +535,7 @@ important
 
 custom acrylic lightpipe?
 
-Time-domain or time-correlated photon counting
-----------------------------------------------
+## Time-domain or time-correlated photon counting
 
 An even better Phase-shift time domain fluorimetry. Iwata use a 20 MHz
 DSO to measure a 5 ns $\tau$ fluorophore. However, this involves a light
@@ -520,12 +557,13 @@ light on and off at 1 MHz, you're only getting a \[\] photons from the
 exponential decay region. Even with a long exposure, that doesn't seem
 to be enough to pick up the decay.
 
-It is also possible to perform flashbulb. () abuse of pmts. Note that as
-long as average current limits are obeyed, PMTs are happy to endure very
-high pulse currents, like flashbulbs for exciting; no shutters or
-anything required. Gating the photomultiplier HV is another technique.
-Figure out the average current limit for your PMT, the expected voltage
-based on your load resistor value and watch that it never exceeds it.
+It is also possible to perform flashbulb. [@Instrument1957] abuse of
+pmts. Note that as long as average current limits are obeyed, PMTs are
+happy to endure very high pulse currents, like flashbulbs for exciting;
+no shutters or anything required. Gating the photomultiplier HV is
+another technique. Figure out the average current limit for your PMT,
+the expected voltage based on your load resistor value and watch that it
+never exceeds it.
 
 Another way to pick up this phase shift is to make your lock-in
 amplifier phase-sensitive - very simple (a 2x clock put into a flip-flop
@@ -536,7 +574,7 @@ quadrature input
 
 gel tampering
 
-()
+[@Measurement1966]
 
 One might expect, given that white noise has an expectation value of
 zero, that this technique would average out to 0, and the signal would
@@ -549,7 +587,7 @@ Therefore, $\text{SNR} = \frac{N}{\sqrt{N}} = \sqrt{N}$. Longer exposure
 times would therefore provide better precision, but with diminishing
 returns.
 
-A more comprehensive consideration ()
+A more comprehensive consideration [@Signala]
 
 However,
 
@@ -571,11 +609,12 @@ However, we had no luck with precipitation.
 
 With the setup we're using and the small quantities, the excitation
 light is somewhere around  $10^5$ times as powerful as the emission.
-This doesn't seem to be a big issue gel-docs, picking out bands on gels
-- they don't usually seem to use excitation filters; however, to get the
-excitation bleed-through low enough to do this quantitative assay, the
-bleed-through must be really low, and in our testing proper dielectric
-filters are required on both the excitation and emission sides.
+This doesn't seem to be a big issue gel-docs, picking out bands on
+gels - they don't usually seem to use excitation filters; however, to
+get the excitation bleed-through low enough to do this quantitative
+assay, the bleed-through must be really low, and in our testing proper
+dielectric filters are required on both the excitation and emission
+sides.
 
 There are a few sources of noise:
 
@@ -611,27 +650,27 @@ Polarization is a neat way to filter; linearly polarize the excitation,
 the emission comes out whatever orientation the DNA happens to be, which
 is usually random. Apparently
 
-Performance and characteristics
--------------------------------
+## Performance and characteristics
 
 Performance of this arrangement was very satisfactory. A 10-second
 integration time, with, produced a background fluorescence signal of
  1500 counts, with per-sample stability of approximately $\pm 1500$
 counts. The
 
-Literature review
------------------
+## Literature review
 
-### ()
+### [@Instrument1957] {#section-1}
 
-[^1]: pulse\_1.pnw line 2567
+::: #refs :::
 
-[^2]: pulse\_1.pnw lines 2517
+[^1]: pulse_1.pnw line 2567
 
-[^3]: pulse\_1.pnw line 1367
+[^2]: pulse_1.pnw lines 2517
 
-[^4]: pulse\_1.pnw line 1719, 1755
+[^3]: pulse_1.pnw line 1367
 
-[^5]: pulse\_1.pnw line 1879
+[^4]: pulse_1.pnw line 1719, 1755
 
-[^6]: pulse\_1.pnw line 1879
+[^5]: pulse_1.pnw line 1879
+
+[^6]: pulse_1.pnw line 1879
