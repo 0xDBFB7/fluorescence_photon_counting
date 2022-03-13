@@ -174,16 +174,14 @@
 </header>
 <nav id="TOC" role="doc-toc">
 <ul>
-<li><a href="#amplification-free-fluorescent-nucleic-acid-detection-via-synchronous-photon-counting">Amplification-free fluorescent nucleic acid detection via synchronous photon counting</a>
+<li><a href="#amplification-free-fluorescent-nucleic-acid-detection-via-synchronous-photon-counting">Amplification-free fluorescent nucleic acid detection via synchronous photon counting</a></li>
+<li><a href="#this-document-currently-lives-at-github."><span>This document currently lives at GitHub.</span></a>
 <ul>
 <li><a href="#executive-summary">Executive summary</a></li>
 <li><a href="#initial-state">Initial state</a></li>
 <li><a href="#review">Review</a></li>
 <li><a href="#flurophore">Flurophore</a></li>
-<li><a href="#simple-cmos-image-stacking-detection">Simple CMOS image stacking detection</a>
-<ul>
-<li><a href="#section"><span class="citation" data-cites="Image2012">(<span>Balsam et al. 2012</span>)</span></a></li>
-</ul></li>
+<li><a href="#simple-cmos-image-stacking-detection">Simple CMOS image stacking detection</a></li>
 <li><a href="#photomultiplier-photon-wavelength-discrimination">Photomultiplier photon wavelength discrimination</a></li>
 <li><a href="#possible-artifacts-and-deficiencies-in">Possible artifacts and deficiencies in </a></li>
 <li><a href="#preparation-and-use">Preparation and use</a></li>
@@ -201,15 +199,14 @@
 <li><a href="#electronics">Electronics</a></li>
 <li><a href="#time-domain-or-time-correlated-photon-counting">Time-domain or time-correlated photon counting</a></li>
 <li><a href="#performance-and-characteristics">Performance and characteristics</a></li>
-<li><a href="#literature-review">Literature review</a>
-<ul>
-<li><a href="#section-1"><span class="citation" data-cites="Instrument1957">(<span>Brody 1957</span>)</span></a></li>
-</ul></li>
+<li><a href="#literature-review">Literature review</a></li>
 </ul></li>
 </ul>
 </nav>
 <h1 id="amplification-free-fluorescent-nucleic-acid-detection-via-synchronous-photon-counting">Amplification-free fluorescent nucleic acid detection via synchronous photon counting</h1>
+<h1 id="this-document-currently-lives-at-github."><a href="https://github.com/0xDBFB7/fluorescence_photon_counting/releases/download/v0.01/fluorescence.pdf">This document currently lives at GitHub.</a></h1>
 <p><img src="fluorescence/fluro_1" alt="image" /></p>
+<p>Please pardon the crudity of assembly.</p>
 <figure>
 <img src="fluorescence/fluro_2" alt="Pardon the mess." /><figcaption aria-hidden="true">Pardon the mess.</figcaption>
 </figure>
@@ -222,35 +219,44 @@
 <h2 id="initial-state">Initial state</h2>
 <p>real-time</p>
 <p>After the dismal failure of luminescent infectivity quantification, and the lack of success in infecting phage due to the small sample volumes in use and the wrong phage type. The plaque assay took too long.</p>
+<p>"The excited state lifetime of PG in buffer is very short, <span class="math inline">\(4 \pm 3 \text{ps}\)</span>, but in complex with DNA it increases almost 1000-fold, reaching a value of <span class="math inline">\(4.4 \pm 0.01 \text{ns}\)</span>."</p>
 <p>No provision for magnetic shielding of the PMT was made.</p>
 <p>As with many other experiments in this project, many negative results reported were tainted by the use of such a low sample volume.</p>
 <p>The typical method to detect. A quantitative PCR</p>
 <p>Such a device is known in biology as a plate reader.</p>
 <p>Nanodrop, using 280 nm absorbance. They’re also $10,000.</p>
-<p>Contrary to luminescence, you have control over when the excitation and emission light turns on. This doesn’t subtract effects like the excitation light from filter leakage</p>
+<p>A crucial advantage. Contrary to luminescence: you have control over when the excitation and emission light turns on.</p>
+<p>Error in luminescence can occur due to variation in detector "dark counts" (a problem that plagued luminescence tests),</p>
+<p>Error in fluorescence</p>
+<p>This doesn’t subtract effects like the excitation light from filter leakage</p>
 <p>Conveniently, T4r has an extraordinarily large genome of approximately 172 kBp dsDNA<span class="citation" data-cites="Structure2014">(<a href="#ref-Structure2014" role="doc-biblioref">Yap and Rossmann 2014</a>)</span>; each virion therefore For comparison, a fingerprint has between 0.042 and 0.14 ng of DNA <span class="citation" data-cites="DNA2019">(<a href="#ref-DNA2019" role="doc-biblioref">Subhani, Daniel, and Frascione 2019</a>)</span>.</p>
-<p>While these quantities are small, it is not particularly challenging, and it is not our intention to suggest that this is a good design; we are simply reporting on Designs for systems with comparable performance are . The similar performance despite extremely high detector sensitivity is probably due to the small light-collecting area due to the objective, and</p>
+<p>While these quantities may sound small, they are not particularly challenging to detect, and it is not our intention to suggest that this is a good design that should be replicated. We are simply reporting on the system that was found to be functional. Designs for systems with comparable performance and even simpler are reported. Despite the extremely high detector sensitivity introduced by photon-counting, similar sensitivity is found. This is probably due to the small light-collecting area due to the objective, and</p>
 <h2 id="review">Review</h2>
-<p><span class="citation" data-cites="Quantification2020">(<a href="#ref-Quantification2020" role="doc-biblioref">Xu, DeVries, and Zhu 2020</a>)</span> quantifies adenovirus titer with a ssDNA 4.7 kbase genome.</p>
+<p>quantifies adenovirus titer with a ssDNA 4.7 kbase genome.</p>
 <p>With a GelRed dye and 528/20 (note: BioTek filters are specified as center wavelength / FWHM).</p>
-<p><span class="citation" data-cites="SYBR2012">(<a href="#ref-SYBR2012" role="doc-biblioref">Dragan et al. 2012</a>)</span> <span class="citation" data-cites="Characterization2010">(<a href="#ref-Characterization2010" role="doc-biblioref">Dragan et al. 2010</a>)</span> offer excellent</p>
-<p>We show that both fluorescence and the excited state lifetime of SG dramatically increase in viscous solvents, demonstrating an approximate 200-fold enhancement in 100 % glycerol, compared to water, which also makes SG a prospective fluorescent viscosity probe.</p>
-<p>Biotium GelGreen has a very specific advantage: to increase the safety of the dye, the flurophore is tied to some huge proprietary molecule, preventing it from diffusing through membranes or capsids. This has the side effect of making the fluorescence intensity strictly related to the quantity of genomic material dispersed in the solvent, rather than</p>
-<p>Luckily, a recent paper has the answer: direct fluorescent detection of DNA in solution, outside using dyes that bind to (intercalate into) DNA. GelGreen doesn’t penetrate.</p>
-<p>A similar method (using fluroescence microscopy rather than photon counting) was also used by, and is generally a common practice in the bioeffects field.</p>
+<p><span class="citation" data-cites="SYBR2012">(<a href="#ref-SYBR2012" role="doc-biblioref">Dragan et al. 2012</a>)</span> offer excellent</p>
+<p><span class="citation" data-cites="Characterization2010">(<a href="#ref-Characterization2010" role="doc-biblioref">Dragan et al. 2010</a>)</span></p>
+<p>Biotium GelGreen has a very specific advantage for this specific application. To increase the safety of the dye, two flurophore monomers have been connected into a dimer with a long backbone "bridge", all but preventing it from diffusing through membranes or capsids.</p>
+<blockquote>
+<p>"On average, these dimeric dyes have a molecular weight at least 2-3 times that of SYBR Safe or SYBR Green I and bear two positive charges as opposed to only one positive charge for SYBR Safe, for example. The much larger sizes as well as the higher charge of GelRed and GelGreen render them difficult to cross the cell membranes, thus denying the opportunity for the dyes to interfere with any intracellular activities, including activities associated with genomic DNA. Consequently, GelRed and GelGreen are not only nonmutagenic but also noncytotoxic within the dye concentration range normally used for nucleic acid gel staining. Furthermore, dimeric dyes such as GelRed and GelGreen exhibit exceptional signal-to-noise ratio because the dyes self-quench in the absence of nucleic acids to result in very low background fluorescence."</p>
+</blockquote>
+<p><span class="citation" data-cites="Methods2014">(<a href="#ref-Methods2014" role="doc-biblioref">Mao, Leung, and Van 2014</a>)</span></p>
+<p>This has the side effect of making the fluorescence intensity strictly related to the quantity of genomic material dispersed in the solvent, not within intact virions.</p>
+<p>It is a shame to</p>
+<p>I was not able to find information on the thermal degradation of these dyes, in case it was desired tot inactivate after adding the fluorophore.</p>
+<p>A similar method (using fluroescence microscopy rather than fluorometry and photon counting) was also used by <span class="citation" data-cites="AC2017">(<a href="#ref-AC2017" role="doc-biblioref">Madiyar et al. 2017</a>)</span>, and is generally a common practice in the bioeffects field.</p>
 <p>Somewhat more challenging than viewing PCR output on a gel, since the total quantity of DNA involved is quite low</p>
 <div class="autem">
 <p>extra credit: how many photons are released?</p>
 </div>
 <p>Unlike luminescence techniques, lock-in is possible</p>
-<p>Xu et al use</p>
-<p>Gel-Doc</p>
 <h2 id="flurophore">Flurophore</h2>
+<p>Luckily, a recent paper has the answer: direct fluorescent detection of DNA in solution, outside using dyes that bind to (intercalate into) DNA.</p>
 <p>the prototypical stain is Ethidium Bromide, but is challenging to obtain outside certain laboratories. GelGreen is safe, very stable against photobleaching and long-term storage, inexpensive, and readily available. GelGreen is an Acridine orange (N-alkylacridinium) dye with a similar spectra to green fluorescent protein.</p>
 <p>the base had integral overcurrent protection, which was triggered a few times during development - a very useful</p>
 <p>For one thing, GelGreen appears to be eminiently stable - samples can be stored for long periods of time, pre-mixed batches.</p>
 <p>bleaching was not obviously an issue. A calibration sample was stored in a dark area with the dye bound to DNA for several months with less than 4% decay observed<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>tom Lexan cuvettes unexpectedly overwhelmed the DNA signal A surplus Hammamatsu R4220 with HC123 current-limiting base at maximum sensitivity was used. A low-voltage silicon photomultiplier like ON Semi’s C-Series SiPMs will probably be sufficient in most cases.</p>
+<p>A surplus Hammamatsu R4220 with HC123 current-limiting base at maximum sensitivity was used. A low-voltage silicon photomultiplier like ON Semi’s C-Series SiPMs will probably be sufficient in most cases. Unlike avalanche photodetectors, SPADs and SiPMs have similar gain properties to PMTs,</p>
 <p>(Phi6 uses an RNA - many dyes have different responses to single-stranded (ss)DNA, dsDNA, or</p>
 <p>As noted by [xi?], this is a saturating effect; if too many flurophores intercalate into the DNA the fluorescence is weaker.</p>
 <p>GelGreen is also sensitive to ssDNA and ssRNA but with 5 times lower efficiency. GelGreen absorbs maximally at 272 nm and 507 nm and emits maximally at 528 nm.<span class="citation" data-cites="GelGreen">(<a href="#ref-GelGreen" role="doc-biblioref">Biotium Inc. n.d.</a>)</span></p>
@@ -258,11 +264,8 @@
 <img src="gelred_gelgreen" style="width:50.0%" alt="Biotium GelRed/GelGreen fluorescence spectra. Credit Biotium Inc, reproduced without permission." /><figcaption aria-hidden="true">Biotium GelRed/GelGreen fluorescence spectra. Credit Biotium Inc, reproduced without permission.</figcaption>
 </figure>
 <h2 id="simple-cmos-image-stacking-detection">Simple CMOS image stacking detection</h2>
-<section id="section" class="@empty">
-<h3><span class="citation" data-cites="Image2012">(<a href="#ref-Image2012" role="doc-biblioref">Balsam et al. 2012</a>)</span></h3>
 <p>florescein An f1.2 lens is used.</p>
-<p>Notably, contrary to most arrangments, the excitation light was input through the transparent bottom of the sample holders. They report that "the limiting factor is the [filter leakage; in their paper they refer to this as noise, distinct from image sensor noise]".</p>
-</section>
+<p>Notably, contrary to most arrangements, the excitation light was input through the transparent bottom of the sample holders. They report that "the limiting factor is the [filter leakage; in their paper they refer to this as noise, distinct from image sensor noise]".</p>
 <p>An incidental advantage is that a color filter makes it easy to diagnose issues with the light path. It is clear whether background,</p>
 <div class="toolchain">
 <p>Lesson learned: color feedback</p>
@@ -300,12 +303,12 @@
 </div>
 <h2 id="light-source">Light source</h2>
 <p>Argon-gas lasers emit several closely-spaced lines in the visible spectrum, the most prominent of which is at 488 nm.</p>
-<p>Cyan diode lasers emitting at 488 nm are SHARP GH04850B2G appears to be obsolete.</p>
+<p>Cyan diode lasers emitting at 488 nm can be found on surplus markets. Modules using SHARP GH04850B2G diode are available, although this appears to be obsolete.</p>
 <p>Due to their coherent emission, eye protection or suitable interlocks are important when working with lasers. (Are tightly filtered LEDs coherent?)</p>
 <p>lasers are available.</p>
 <p><span class="citation" data-cites="Pulsed2010">(<a href="#ref-Pulsed2010" role="doc-biblioref">Cree Inc. 2010</a>)</span> recommends</p>
 <h3 id="diode-laser-tests">Diode laser tests</h3>
-<p>Various impromptu tests were made with a 2.5W 445 nm laser cutter. Commodity blue 445 nm emitters only barely clip the absorption spectrum of GelGreen, apparently leading to a poor fluorescence yield. Combined with the very high intensity, an unusably high background was found even with the large 0.4 mL test sample. This observation were tainted by a very poor optical arrangement and was largely inconclusive; 445 nm laser diode alone was never tested with the final optical arrangement, and may well have provided sufficient. This may allow the elimination of the excitation filter.</p>
+<p>Various impromptu tests were made with a 2.5W 445 nm laser cutter. Commodity blue 445 nm emitters only barely clip the absorption spectrum of GelGreen, leading to a much lower fluorescence signal and signal-to-background than higher wavelengths. These observations were tainted by a very poor optical arrangement and were largely inconclusive; the 445 nm laser diode alone was never tested with the final optical arrangement, and may well have proved sufficient. This may allow the elimination of the excitation filter.</p>
 <p>(Note that inexpensive laser cutter modules are often intensity modulated via PWM rather than via analog current; this can cause great confusion if not accounted for).</p>
 <p>gel doc papers use leds without filters, and paper says narrow leds exist, talk about results with leds</p>
 <p>Blue LEDs [Cree XLamp XP-E2 Blue Starboard] are then sufficient for excitation (though high CRI white LEDs emit more 480 nm blue, green leakage is too high).</p>
@@ -339,6 +342,7 @@
 <p>(486 nm is the <span class="math inline">\(n=4\)</span> Balmer line for hydrogen).</p>
 <p>(note; this was a limited-stock clearance item that has since been discontinued. Equivalent filters are readily available from other suppliers, such as the ThorLabs FL05488-10 or Newport 05LF10-488).</p>
 <p>The anti-reflective side faced the LED; the reflective side faced the fiber optic.</p>
+<p>This does mean is filtered before entering the fiber optic. If some component of the fiber optic assembly were fluorescent, this would contribute to a background.</p>
 <p>ThorLabs FGB7 emission filter superficially looks satisfactory, but the tails are believed to be too long to be useable.</p>
 <h3 id="emission-filters-used">Emission filters used</h3>
 <p>Two filters in series, one:</p>
@@ -351,7 +355,6 @@
 <p>The 10 nm FWHM emission filter is much narrower than professional GFP filters, especially the super-wide edge-pass ones; a lot of photons are lost that way, decreasing efficiency. However, it still appears to be more than sufficient.</p>
 <p>manuals for gel-docs typically suggest #16 or #15. SYBR recommends #15.</p>
 <p>For an even lower-cost system, orange or amber acrylic sheets (typically used for UV filtering) with similar filtering spectra (e.g. Acrylite 408-5) also exist; such a filter is used on the Carolina gel-doc, for instance.</p>
-<p>This does mean is filtered before entering the fiber optic.</p>
 <div class="center">
 
 </div>
@@ -362,13 +365,14 @@
 <p>Unlike gels or plastic-glass sandwiches, thin-film filters have the property that the pass-band depends greatly on the angle of incidence as <span class="math display">\[\lambda_{\text{shifted}} = \lambda \sqrt{1-\sin(\theta)^2}\]</span></p>
 <p>The wavelength shifts shorter (bluer) as <span class="math inline">\(\theta\)</span> increases. This can be a helpful property for creating tunable filters, but is a nuisance here. This isn’t an issue for the excitation filter, but is an issue for the.</p>
 <p>Thin-film dielectric filters also age; ThorLabs considers filters to have a lifetime of 2 years.</p>
+<p>Noncollimated light, the the band of a dielectric interference bandpass filter shifts = <span class="math inline">\(488 * (sqrt(1-(sin(45 deg)/2.08)^2)) = 458\)</span>; it only shortens in wavelength. This would be a problem for the emission filter, except we’re using a colored-glass filter for that side.</p>
 <p>Since the LEDs and flurophore emissions are not naturally collimated, this poses a little bit of an issue. The microscope objective seems to provide sufficient collimation for the emission filter.</p>
 <p>The Edmund filter was unmounted glass. Also, these thin-film filters do not extend to the edge of the glass. Edge-blackening ("inked") filters</p>
-<p>The wavelength can also be shifted by a few nm over the temperature range 0 to 50</p>
+<p>The wavelength can also be shifted by a few nm over temperature.</p>
 <p>The LED was about 3 cm away, and put through a  3 mm aperture in a piece of PVC pipe. The output from the filter was directly into the 1 mm fiber, itself improving the bandpass.</p>
 <h2 id="electronics">Electronics</h2>
 <p><img src="fluorescence/PMT" alt="image" /></p>
-<p>Monitoring the output with a <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, a 100 ns switching time was typical. A modulation frequency of 1 MHz was achievable, but no</p>
+<p>Monitoring the output with a photodiode <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>, a 100 ns switching time was typical. A modulation frequency of 1 MHz was achievable, but no</p>
 <p>While drift in the power supply does not affect the background lock-in, it can affect run-to-run repeatability.</p>
 <div class="toolchain">
 <p>Running FPGA designs at varying speeds helps to debug race-condition related bugs. <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
@@ -419,15 +423,10 @@
 <p>Polarization is a neat way to filter; linearly polarize the excitation, the emission comes out whatever orientation the DNA happens to be, which is usually random. Apparently</p>
 <h2 id="performance-and-characteristics">Performance and characteristics</h2>
 <p>Performance of this arrangement was very satisfactory. A 10-second integration time, with, produced a background fluorescence signal of  1500 counts, with per-sample stability of approximately <span class="math inline">\(\pm 1500\)</span> counts. The</p>
-<h2 id="literature-review">Literature review</h2>
-<h3 id="section-1"><span class="citation" data-cites="Instrument1957">(<a href="#ref-Instrument1957" role="doc-biblioref">Brody 1957</a>)</span></h3>
-<p>::: <span>#refs</span> :::</p>
+<h2 class="unnumbered" id="literature-review">Literature review</h2>
 <div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
 <div id="ref-Measurement1966" class="csl-entry" role="doc-biblioentry">
 Arecchi, F. T., E. Gatti, and A. Sona. 1966. <span>“Measurement of <span>Low Light Intensities</span> by <span>Synchronous Single Photon Counting</span>.”</span> <em>Review of Scientific Instruments</em> 37 (7): 942–48. <a href="https://doi.org/10.1063/1.1720370">https://doi.org/10.1063/1.1720370</a>.
-</div>
-<div id="ref-Image2012" class="csl-entry" role="doc-biblioentry">
-Balsam, Joshua, Hugh Alan Bruck, Yordan Kostov, and Avraham Rasooly. 2012. <span>“Image Stacking Approach to Increase Sensitivity of Fluorescence Detection Using a Low Cost Complementary Metal-Oxide-Semiconductor (<span>CMOS</span>) Webcam.”</span> <em>Sensors and Actuators B: Chemical</em> 171–172 (August): 141–47. <a href="https://doi.org/10.1016/j.snb.2012.02.003">https://doi.org/10.1016/j.snb.2012.02.003</a>.
 </div>
 <div id="ref-GelGreen" class="csl-entry" role="doc-biblioentry">
 Biotium Inc. n.d. <span>“<span>GelGreen</span> <span>Nucleic Acid Gel Stain</span>, 10,<span>000X</span>.”</span> <span>Biotium Inc.</span> Accessed October 22, 2021. <a href="https://biotium.com/wp-content/uploads/2015/02/PI-41004-41005.pdf">https://biotium.com/wp-content/uploads/2015/02/PI-41004-41005.pdf</a>.
@@ -452,6 +451,12 @@ Hamamatsu Inc. 2007. <span>“<span>PMT Handbook</span>, <span>Chapter</span> 7.
 </div>
 <div id="ref-273337" class="csl-entry" role="doc-biblioentry">
 (https://electronics.stackexchange.com/users/117295/jack-creasey), Jack Creasey. n.d. <span>“Designing a Fast <span>LED</span>-Driver from Scratch.”</span> Electrical Engineering Stack Exchange. <a href="https://electronics.stackexchange.com/q/273337">https://electronics.stackexchange.com/q/273337</a>.
+</div>
+<div id="ref-AC2017" class="csl-entry" role="doc-biblioentry">
+Madiyar, Foram Ranjeet, Sherry L. Haller, Omer Farooq, Stefan Rothenburg, Christopher Culbertson, and Jun Li. 2017. <span>“<span>AC</span> Dielectrophoretic Manipulation and Electroporation of Vaccinia Virus Using Carbon Nanoelectrode Arrays.”</span> <em>ELECTROPHORESIS</em> 38 (11): 1515–25. <a href="https://doi.org/10.1002/elps.201600436">https://doi.org/10.1002/elps.201600436</a>.
+</div>
+<div id="ref-Methods2014" class="csl-entry" role="doc-biblioentry">
+Mao, Fei, Wai-Yee Leung, and Tam Van. 2014. Methods of using dyes in association with nucleic acid staining or detection. 8877437B1. U.S. patent, issued November 4, 2014. <a href="https://patents.google.com/patent/US8877437/en?oq=biotium+gelgreen+acridine+orange+safety">https://patents.google.com/patent/US8877437/en?oq=biotium+gelgreen+acridine+orange+safety</a>.
 </div>
 <div id="ref-Highspeed" class="csl-entry" role="doc-biblioentry">
 osram. n.d. <span>“High-Speed Switching of <span>IR</span>-<span>LEDs</span>.”</span>
@@ -479,9 +484,6 @@ Subhani, Zuhaib, Barbara Daniel, and Nunzianda Frascione. 2019. <span>“<span>D
 </div>
 <div id="ref-vurek1982nanoliter" class="csl-entry" role="doc-biblioentry">
 Vurek, Gerald G. 1982. <span>“Nanoliter-Volume Flow-Through Fluorometer.”</span> <em>Analytical Chemistry</em> 54 (4): 840–42. <a href="https://doi.org/10.1021/ac00241a065">https://doi.org/10.1021/ac00241a065</a>.
-</div>
-<div id="ref-Quantification2020" class="csl-entry" role="doc-biblioentry">
-Xu, Jian, Steven H. DeVries, and Yongling Zhu. 2020. <span>“Quantification of <span>Adeno</span>-<span>Associated Virus</span> with <span>Safe Nucleic Acid Dyes</span>.”</span> <em>bioRxiv</em>, February, 2020.02.27.968636. <a href="https://doi.org/10.1101/2020.02.27.968636">https://doi.org/10.1101/2020.02.27.968636</a>.
 </div>
 <div id="ref-Structure2014" class="csl-entry" role="doc-biblioentry">
 Yap, Moh Lan, and Michael G Rossmann. 2014. <span>“Structure and Function of Bacteriophage <span>T4</span>.”</span> <em>Future Microbiology</em> 9 (October): 1319–27. <a href="https://doi.org/10.2217/fmb.14.91">https://doi.org/10.2217/fmb.14.91</a>.
